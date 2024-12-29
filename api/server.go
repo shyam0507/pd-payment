@@ -22,7 +22,7 @@ func (s *Server) Start() {
 	e.Use(middleware.RequestID())
 
 	g := e.Group("/api/payment/v1.0")
-	g.PUT("/:orderId", s.updatePayment)
+	g.PUT("/orderId/:orderId", s.updatePayment)
 
 	e.Start(":" + s.port)
 }

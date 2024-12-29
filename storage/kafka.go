@@ -35,7 +35,7 @@ func (k KafkaProducer) ProducePaymentReceivedEvent(key string, value types.Payme
 		return err
 	}
 
-	slog.Info("kafka event published for Key", "Key", key)
+	slog.Info("Payment Received event published for Key", "Key", key)
 
 	return nil
 }
