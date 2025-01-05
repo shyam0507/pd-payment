@@ -26,7 +26,7 @@ func (s *Server) updatePayment(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	s.producer.ProducePaymentReceivedEvent(payment.Id.Hex(), types.PaymentReceivedEvent{
+	s.producer.ProducePaymentReceivedEvent(payment.OrderId, types.PaymentReceivedEvent{
 		Type:            "PaymentReceived",
 		DataContentType: "application/json",
 		Data:            types.PaymentInfo{OrderId: payment.OrderId, PaymentId: payment.Id.Hex(), Total: payment.Total},
