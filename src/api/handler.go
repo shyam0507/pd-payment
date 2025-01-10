@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/shyam0507/pd-payment/types"
+	"github.com/shyam0507/pd-payment/src/types"
 )
 
 func (s *Server) updatePayment(c echo.Context) error {

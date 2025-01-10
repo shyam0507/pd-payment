@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/shyam0507/pd-payment/types"
+	"github.com/shyam0507/pd-payment/src/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

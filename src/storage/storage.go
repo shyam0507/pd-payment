@@ -1,6 +1,6 @@
 package storage
 
-import "github.com/shyam0507/pd-payment/types"
+import "github.com/shyam0507/pd-payment/src/types"
 
 type Storage interface {
 	FindPayment(order string) (types.Payment, error)

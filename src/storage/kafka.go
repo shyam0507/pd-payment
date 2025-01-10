@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"log/slog"
+	"os"
 
 	"github.com/segmentio/kafka-go"
-	"github.com/shyam0507/pd-payment/types"
+	"github.com/segmentio/kafka-go/sasl/plain"
+	"github.com/shyam0507/pd-payment/src/types"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -41,22 +43,46 @@ func (k KafkaProducer) ProducePaymentReceivedEvent(key string, value types.Payme
 }
 
 func NewKafkaProducer(topic string, brokers []string) Producer {
+	username := os.Getenv("KAFKA_USERNAME")
+	password := os.Getenv("KAFKA_PASSWORD")
+	mechanism := plain.Mechanism{
+		Username: username,
+		Password: password,
+	}
+
 	w := &kafka.Writer{
 		Addr:     kafka.TCP(brokers...),
 		Topic:    topic,
 		Balancer: &kafka.LeastBytes{},
+		Transport: &kafka.Transport{
+			SASL: mechanism,
+		},
+		AllowAutoTopicCreation: true,
 	}
 
 	return KafkaProducer{writer: w}
 }
 
 func NewKafkaConsumer(topic string, brokers []string, storage Storage) Consumer {
+
+	username := os.Getenv("KAFKA_USERNAME")
+	password := os.Getenv("KAFKA_PASSWORD")
+	mechanism := plain.Mechanism{
+		Username: username,
+		Password: password,
+	}
+
+	dialer := &kafka.Dialer{
+		SASLMechanism: mechanism,
+	}
+
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:     brokers,
 		Topic:       topic,
-		GroupID:     "pd-payment",
+		GroupID:     "pd-payment-group",
 		StartOffset: kafka.LastOffset,
 		MaxBytes:    10e6, // 10MB
+		Dialer:      dialer,
 	})
 
 	return KafkaConsumer{reader: r, storage: storage}
